@@ -45,6 +45,11 @@ function createNewRow(entry)
         {
             inputTypeData = ' type="number"';
         }
+        else if(field == "callput")
+        {
+            inputTypeData = ' type="text" required maxlength="4"';
+            
+        }
         else
         {
             inputTypeData = ' type="text"';
@@ -61,12 +66,13 @@ function createNewRow(entry)
         else
         {
             content = entry[field];
+            console.log(content);
         }
 
 
 
 
-        var cellContent = '<td><input entryId=' + entryID + ' row='+ (numRows - 1) + ' class=' + field + inputTypeData + ' value=' + content + ' /></td>';
+        var cellContent = '<td><input entryId=' + entryID + ' row='+ (numRows - 1) + ' class=' + field + inputTypeData + ' value="' + content + '" /></td>';
         newRow.insertAdjacentHTML( 'beforeend', cellContent );
     })
 
@@ -125,7 +131,7 @@ $(document).ready(function () {
         var entryID = cell.attr('entryid');
         var cellRow = cell.attr('row');
 
-        //console.log("Entry ID: " + entryID + ", Attribute: " + cellAttribute + ", Value: " + cellValue + ", Row: " + cellRow);
+        console.log("Entry ID: " + entryID + ", Attribute: " + cellAttribute + ", Value: " + cellValue + ", Row: " + cellRow);
 
         var data = { "entryid": entryID, "cellAttr": cellAttribute, "cellValue": cellValue, "cellRow" : cellRow };
 

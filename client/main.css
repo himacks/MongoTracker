@@ -17,6 +17,7 @@ td {
 input {
     width: 95%;
     margin: 0.1rem;
+    font-family: Arial;
 }
 
 #btnDelRow {
@@ -27,4 +28,9 @@ input {
     margin-left: 0.5rem;
     color: rgb(121, 121, 121);
     cursor: pointer;
+}
+
+#btnAddRow {
+    margin: 0.3rem;
+    display: inline-block;
 }
