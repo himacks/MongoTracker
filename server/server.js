@@ -50,19 +50,93 @@ app.use('/getdata', (req, res) => {
 
 app.use("/postData", (req, res) => {
     if (req.method == 'POST') {
-        console.log("Entry ID: " + req.body.entryid + ", Attribute: " + req.body.cellAttr + ", Value: " + req.body.cellValue);
-        if (req.body.entryid == "notCataloged")
+
+        var entryID = req.body.entryid;
+        var cellAttr = req.body.cellAttr;
+        var cellVal = req.body.cellValue;
+        var cellRow = req.body.cellRow;
+        var newRow;
+
+        //console.log("Entry ID: " + entryID + ", Attribute: " + cellAttr + ", Value: " + cellVal + ", Cell Row: " + cellRow);
+        if (entryID == "notCataloged")
         {
-            res.send("Created new entry, cataloged as 411251512513531");
+            console.log("CREATING OBJECT");
+            var newEntryIDObject = mongoose.Types.ObjectId();
+            var creationData = {"_id": newEntryIDObject, [cellAttr]: cellVal};
+            entryID = newEntryIDObject.toString();
+            newRow = true;
+            createNewObject(creationData);
         }
         else
         {
-            res.send("Updated entry");
+            console.log("UPDATING OBJECT");
+            newRow = false;
+            var updateData = {[cellAttr]: cellVal};
+            updateObject(entryID, updateData);
         }
+        //console.log(returnData);
+        var returnData = { "entryid": entryID, "newRow": newRow, "cellRow": cellRow};
+        res.send(returnData);
     }
 })
 
 
+app.use("/delRow", (req, res) => {
+    if (req.method == 'POST') {
+
+        var entryID = req.body.entryid;
+
+        deleteObject(entryID);
+
+    }
+})
+
 app.listen(4000, function () {
     console.log('server is running');
 })
+
+
+function createNewObject(data)
+{   
+    optionsEntry.create(data, function(err, result) {
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            console.log("RESULT: " + result);
+        }
+    });
+}
+
+function updateObject(objectID, data)
+{
+    optionsEntry.findByIdAndUpdate(objectID, data, function(err, result) {
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            console.log("RESULT: " + result);
+        }
+    });
+}
+
+function deleteObject(objectID)
+{
+
+    console.log("attempting to delete " + objectID);
+
+    optionsEntry.deleteOne({ "_id" : objectID}, function(err, result) {
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            console.log("RESULT: " + result);
+        }
+    });
+}

@@ -1,0 +1,30 @@
+#optionsTable {
+    width: 100%;
+}
+
+tr {
+    width: 100%;
+}
+
+tr:hover > td > input{
+    background-color: rgb(247, 244, 244);
+  }
+
+td {
+    width: auto;
+}
+
+input {
+    width: 95%;
+    margin: 0.1rem;
+}
+
+#btnDelRow {
+    margin-left: 0.5rem;
+}
+
+#btnDelRow:hover {
+    margin-left: 0.5rem;
+    color: rgb(121, 121, 121);
+    cursor: pointer;
+}
