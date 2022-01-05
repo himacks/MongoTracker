@@ -1,36 +1,205 @@
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button,
+::-webkit-calendar-picker-indicator {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 #optionsTable {
     width: 100%;
+    border-collapse: collapse;
+}
+
+#tableDiv {
+    border:solid black 2px;
+    border-radius: 20px;
+    min-width:88em;
 }
 
 tr {
     width: 100%;
+    text-align: center;
+    border-radius: 20px;
 }
 
-tr:hover > td > input{
-    background-color: rgb(247, 244, 244);
-  }
+th {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
 
 td {
-    width: auto;
+    border: hidden;
+    text-align: center;  
+    line-height: 2rem;
+    white-space:nowrap;
+    max-width: 100%;
+    padding: 0.5rem 0 0.5rem 0;
+}
+
+td > span > span {
+    border-color:transparent;
+    box-shadow:0 0 0 2px #000;
+    border-radius: 40px;
+    padding:5px;
+    background-color: white;
+}
+
+td > span {
+    padding: 0.67rem 0.5rem;
+    border-top: black solid 2px;
+    border-bottom: black solid 2px;
+}
+
+tr:nth-child(even) > td > span {
+    background-color: rgba(216, 216, 216, 0.979);
+}
+
+td:first-child > span {
+    padding:0.67rem 0.5rem 0.67rem 0.8rem;
+    margin-left: 5px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-left:solid black 1px;
+
+}
+
+td:last-child > span {
+    padding:0.67rem 0.8rem 0.67rem 0.5rem;
+    border-top-right-radius: 25px;
+    margin-right: 5px;
+    border-bottom-right-radius: 25px;
+    border-right:solid black 1px;
+}
+
+
+
+.dateCol, .expiryCol {
+    /*
+    max-width: 100px;
+    */
+}
+
+.dateInput, .expiryInput {
+    /*
+    max-width: 100px;
+    */
+    width: 7.5em;
+}
+
+.profitCol {
+
+}
+
+.profitInput {
+    width: 4em;
+}
+
+.tickerCol {
+    
+}
+
+.tickerInput {
+    width: 4.5em;
+}
+
+.callputCol {
+        /*
+    min-width: 30px;
+    max-width: 30px;
+        */
+}
+
+.callputInput {
+    width: 3em;
+}
+
+.numConsCol {
+        /*
+    min-width: 30px;
+    max-width: 30px;
+        */
+}
+
+.numConsInput {
+    width: 2em;
+}
+
+.strikeCol {
+        /*
+    min-width: 40px;
+    max-width: 40px;
+        */
+}
+
+.strikeInput {
+    width: 4em;
+}
+
+.rrCol {
+        /*
+    min-width: 50px;
+    max-width: 50px;
+        */
+}
+
+.rrInput {
+    width: 5em;
+}
+
+.emotionsInput {
+    width: 100%;
+}
+
+.emotionsCol {
+    width: 100%;
+    min-width:15em;
+    padding-right:1.8rem;
+}
+
+.tradeNotesInput {
+    width: 12em;
+}
+
+.entryCol, .slCol, .tpCol, .soldCol {
+        /*
+    min-width: 50px;
+    max-width: 50px;
+        */
+}
+
+.entryInput, .slInput, .tpInput, .soldInput {
+    width: 3em;
+}
+
+.tickerInput, .callputInput, .emotionsInput, .numConsInput, .strikeInput, .rrInput, .entryInput, .slInput, .tpInput, .soldInput, .profitInput {
+    text-align: center;
 }
 
 input {
-    width: 95%;
-    margin: 0.1rem;
+    margin:0 auto;
     font-family: Arial;
+    border-style: hidden;
+}
+
+input:focus {
+    outline: none;
 }
 
 #btnDelRow {
-    margin-left: 0.5rem;
+    border-radius: 100%;
+    padding: 0 0.1em 0 0.1em;
 }
 
-#btnDelRow:hover {
-    margin-left: 0.5rem;
-    color: rgb(121, 121, 121);
+#btnDelRow:hover  {
+    color: rgb(255, 255, 255);
     cursor: pointer;
+    background-color: black;
 }
 
 #btnAddRow {
-    margin: 0.3rem;
+    margin: 0.5em 0 0 0;
     display: inline-block;
+    border-radius: 40px;
+    padding: 0.5em;
 }

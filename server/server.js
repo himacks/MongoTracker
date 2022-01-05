@@ -25,7 +25,7 @@ const optionsEntrySchema =  {
     expiry: Date,
     numCons: Number,
     strike: Number,
-    rr: Number,
+    rr: String,
     entry: Number,
     sl: Number,
     tp: Number,
@@ -52,27 +52,46 @@ app.use("/postData", (req, res) => {
     if (req.method == 'POST') {
 
         var entryID = req.body.entryid;
-        var cellAttr = req.body.cellAttr;
-        var cellVal = req.body.cellValue;
+
+        console.log(req.body);
+
+        console.log(entryID);
+        
+        var cellData = req.body.cellData;
+
         var cellRow = req.body.cellRow;
+
         var newRow;
+
+        var objectData = {};
+
+            cellData.forEach(function(item) {
+                objectData[item["cellAttr"]] = item["cellValue"];
+            })
+
+        console.log(objectData);
 
         //console.log("Entry ID: " + entryID + ", Attribute: " + cellAttr + ", Value: " + cellVal + ", Cell Row: " + cellRow);
         if (entryID == "notCataloged")
         {
             console.log("CREATING OBJECT");
             var newEntryIDObject = mongoose.Types.ObjectId();
-            var creationData = {"_id": newEntryIDObject, [cellAttr]: cellVal};
+            //var creationData = {"_id": newEntryIDObject, [cellAttr]: cellVal};
+            
+
+            objectData["_id"] = newEntryIDObject;
+
+            console.log(objectData);
+
             entryID = newEntryIDObject.toString();
             newRow = true;
-            createNewObject(creationData);
+            createNewObject(objectData);
         }
         else
         {
             console.log("UPDATING OBJECT");
             newRow = false;
-            var updateData = {[cellAttr]: cellVal};
-            updateObject(entryID, updateData);
+            updateObject(entryID, objectData);
         }
         //console.log(returnData);
         var returnData = { "entryid": entryID, "newRow": newRow, "cellRow": cellRow};
@@ -112,6 +131,7 @@ function createNewObject(data)
 
 function updateObject(objectID, data)
 {
+
     optionsEntry.findByIdAndUpdate(objectID, data, function(err, result) {
         if(err)
         {
