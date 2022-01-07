@@ -74,23 +74,24 @@ function createNewRow(entry)
         newRow.insertAdjacentHTML( 'beforeend', cellContent );
     })
 
-    var delButtonContent = '<td class="removeCol"><span><span id="btnDelRow" entryId=' + entryID + ' row=' + (numRows - 1) + '>&#10006</span></span></td>';
+    var delButtonContent = '<td class="removeCol"><span><span id="btnDelSpan" ><span id="btnDelRow" entryId=' + entryID + ' row=' + (numRows - 1) + '>&#10006</span></span></span></td>';
     newRow.insertAdjacentHTML( 'beforeend', delButtonContent );
 
 
-    newRow.lastChild.addEventListener('click', function()
+    newRow.lastChild.lastChild.addEventListener('click', function()
     {
 
-        var currEntryId = newRow.lastChild.firstChild.getAttribute("entryID");
+        var currEntryId = newRow.lastChild.firstChild.firstChild.firstChild.getAttribute("entryID");
 
         if( currEntryId != "notCataloged" )
         {
             deleteRow(  currEntryId );
         }
 
-        var rowToDel = parseInt(newRow.lastChild.firstChild.getAttribute("row")) + 1;
+        var rowToDel = parseInt(newRow.lastChild.firstChild.firstChild.firstChild.getAttribute("row")) + 1;
 
         //console.log(rowToDel);
+
 
         tbodyRef.deleteRow(rowToDel);
 
@@ -106,7 +107,7 @@ function validateRows()
     var rowNum = -1;
     for (var child of tbodyRef.children) {
         for (var cell of child.children) {
-            cell.firstChild.setAttribute("row", rowNum);
+            cell.firstChild.firstChild.firstChild.setAttribute("row", rowNum); //BUG WHEN DELETING ROWS FIX ME
         }
 
         rowNum += 1;
@@ -128,6 +129,9 @@ $(document).ready(function () {
         var cell = $(this);
         var cellValue = cell.val();
         var cellAttribute = cell.attr('class').replace("Input", "");
+
+        console.log(cellAttribute);
+
         var entryID = cell.attr('entryid');
         var cellRow = cell.attr('row');
 
@@ -143,6 +147,7 @@ $(document).ready(function () {
             {
                 dontSend = true;
                 cell.css("border-color", "red");
+                console.log("invalid input");
             }
             else
             {
@@ -157,6 +162,7 @@ $(document).ready(function () {
             if(!reg.test(cellValue))
             {
                 dontSend = true;
+                console.log("invalid input");
                 cell.css("border-color", "red");
             }
             else
@@ -167,7 +173,10 @@ $(document).ready(function () {
             
         }
 
-        var parentRow = cell.parent().parent();
+        var parentRow = cell.parent().parent().parent().parent();
+
+        console.log(parentRow);
+
         var rrValue = parentRow.find(".rrInput").val();
         var entryValue = parentRow.find(".entryInput").val();
         var soldValue = parentRow.find(".soldInput").val();
@@ -195,7 +204,7 @@ $(document).ready(function () {
         //}
         if(!dontSend)
         {
-            postData(data);
+            postData(data, $(this));
         }
     });
 });
@@ -228,7 +237,7 @@ function calculateProfit(parentRow, entry, sold, numCons, cellRow, entryID)
     postData(data);
 }
 
-function postData(data)
+function postData(data, referenceCell)
 {
     $.ajax({
         url: 'http://localhost:4000/postData',
@@ -236,13 +245,13 @@ function postData(data)
         type: 'POST',
         success: function( data, status, xhttp) {
             // data will be true or false if you returned a json bool
+
             if (data["newRow"] == true)
             {
-                $('#optionsTable :input').filter('[row="' + parseInt(data["cellRow"]) + '"]').each(function() {
-                    $(this).attr('entryId', data["entryid"]);
-                });
+                referenceCell.attr('entryId', data["entryid"]);
             }
-       },
+       }
+
     })
 }
 
