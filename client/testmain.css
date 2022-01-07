@@ -1,0 +1,71 @@
+#testTagBox > span > span {
+    border-color:transparent;
+    box-shadow:0 0 0 2px #000;
+    border-radius: 40px;
+    padding:5px;
+    background-color: white;
+    width: 100%;
+/* changed this here */
+}
+
+#testTagBox > span {
+    padding: 0.67rem 0.5rem;
+    width: 100%;
+    display:flex; /* changed this here */
+}
+
+#testTagBox {
+    width: 30rem;
+    padding-right:1.8rem;
+}
+
+#emotionsDiv {
+    display: flex; /* changed this here */
+    width: 100%;
+    white-space: nowrap;
+}
+
+#emotionTagsDiv {
+    flex: 1 1 auto; /* changed this here */
+    white-space: nowrap;
+    display:flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content:flex-end;
+}
+
+.emotionTag {
+    flex: 1 1 auto;
+    vertical-align: text-bottom;
+    padding: 0.2em 0.5em;
+    margin-right: 0.5em;
+    text-align: center;
+    border:solid black 1px;
+    border-radius: 25px;
+}
+
+.emotionWord {
+    font-size: 9pt;
+    font-family: Arial;
+    margin-right: 4px;
+}
+
+.emotionDel {
+    font-size: 7pt;
+    vertical-align: top;
+}
+
+.emotionDel:hover {
+    cursor: pointer;
+}
+
+input {
+    font-family: Arial;
+    flex: 20 1 auto; /* changed this here */
+    width: 100%;
+    text-align: left;
+}
+
+input:focus {
+    outline: none;
+}

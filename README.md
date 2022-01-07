@@ -10,7 +10,27 @@ Next Steps:
 
 Next Steps:
 
-- auto populate slots based on data like risk/reward ratio
-- auto calculate profit if entry and exit are filled out
+- auto populate slots based on data like risk/reward ratio - CHECK
+- auto calculate profit if entry and exit are filled out - CHECK
 - change css coloring for profit whether its positive or negative
-- start looking into css for some cool styling?
+- start looking into css for some cool styling? - CHECKKKKKK BABY
+
+
+Next Steps:
+
+- figure out how to handle emotions, where each new word is put into a mini box , colored maybe
+- 
+
+
+
+
+
+
+
+
+
+
+
+GOALS
+
+- Need to somehow add a way so that you can add sub entries in a single trade, this will allow people to enter secondary entries like adding dips or adding to winners, one way to this is adding a + button next to the remove column, and then it expands the current row showing options to add another entry etc.
