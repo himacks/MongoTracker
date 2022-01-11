@@ -10,7 +10,6 @@ fetch('http://localhost:4000/getdata')
     }
 )
 
-var tbodyRef = document.getElementById('optionsTable').getElementsByTagName('tbody')[0];
 const optionFields = ["date", "ticker", "callput", "expiry", "numCons", "strike", "rr", "entry", "sl", "tp", "sold", "profit", "tradeNotes", "emotions"];
 
 const btnAddRow = document.querySelector('#btnAddRow');
@@ -31,7 +30,10 @@ btnAddRow.addEventListener('click', function()
  */
 function createNewRow(entry)
 {
-    var newRow = tbodyRef.insertRow();
+    $( "#optionsDiv" ).append( '<div class="optionsRow optionsRowEntry"></div>' );
+
+    var rowRef = $( ".optionsRowEntry" ).last();
+
     var entryID = "notCataloged";
         
     optionFields.forEach(field =>
@@ -81,46 +83,56 @@ function createNewRow(entry)
 
         if(field == "emotions")
         {
-            var cellContent = '<td class="' + field + 'Col"><span><span><div class="emotionsDiv"><div class="emotionTagsDiv"></div><input entryId=' + entryID + ' class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></div></span></td>';
+            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry"><div class="emotionsDiv"><div class="emotionTagsDiv"><input entryId=' + entryID + ' class="' + field + "Input" + '"' + inputTypeData + ' value="" /></div></span></td>';
+            rowRef.append( cellContent );
+
+            var emotionsColRef = rowRef.find('.emotionsInput');
+
+            if(entry != undefined)
+            {
+                entry[field].forEach(inputWord => {
+                    if(inputWord.length > 0)
+                    {
+                        createTag(emotionsColRef, inputWord, false );                 
+                    }
+                });
+            }
         }
         else
         {
-            var cellContent = '<td class="' + field + 'Col"><span><span><input entryId=' + entryID + ' class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></span></td>';
+            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry"><span class="inputBorder"><input entryId=' + entryID + ' class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></span></span>';
+            rowRef.append( cellContent );
         }
 
-
-
-        newRow.insertAdjacentHTML( 'beforeend', cellContent );
+        
     })
 
-    var delButtonContent = '<td class="removeCol"><span><span id="btnDelSpan" ><span id="btnDelRow" entryId=' + entryID + '>&#10006</span></span></span></td>';
-    newRow.insertAdjacentHTML( 'beforeend', delButtonContent );
+    var delButtonContent = '<span class="delRowButton"><span class="inputBorder btnDelRowBorder"><span class="btnDelRowText" entryId=' + entryID + '>&#10006</span></span></span>';
 
+    rowRef.append( delButtonContent );
 
-    newRow.lastChild.lastChild.addEventListener('click', function()
+    rowRef.find( ".delRowButton" ).click( function()
     {
 
         var currEntryId = $(this).children()[0].firstChild.getAttribute("entryid");
 
-        var parentRow = $(this).parent().parent()[0];
+        $(this).parent().remove();
 
-        var rowToDel = parentRow['sectionRowIndex'];
 
         if( currEntryId != "notCataloged" )
         {
             deleteRow( currEntryId );
         }
 
-
-        tbodyRef.deleteRow(rowToDel);
-
     });
 
-    newRow.lastChild.previousSibling.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {          
-          createTag($(this));
+    rowRef.find('.emotionsInput').on('keypress',function(e) {
+        if(e.which == 13) {       
+          createTag($(this), $(this).val(), true);
         }
     });
+
+
 }
 
 /*
@@ -137,17 +149,51 @@ $('.emotionsInput').keypress(function (e) {
 })
 */
 
-function createTag(currentCell)
+function createTag(currentCell, givenWord, isNew)
 {
-    var inputWord = currentCell.find('input').val();
+    var parentCell = currentCell.parent();
 
-    currentCell.find('input').val("");
-    var newTagHTML = '<span class="emotionTag"><span class="emotionWord">' + inputWord + '</span><span class="emotionDel">&#10006</span>';
-    currentCell.find('.emotionTagsDiv').append(newTagHTML);
-    currentCell.find(".emotionTagsDiv").find(".emotionDel").last().click(function () {
-        $(this).parent().remove();
-    });    
-    
+
+    if(givenWord != undefined && givenWord.length > 0)
+    {
+        var inputWord = givenWord;
+        
+        var randomID = Math.floor(Math.random() * 100);
+
+        currentCell.val("");
+        var newTagHTML = '<span class="emotionTag" id="' + randomID + '"><span class="emotionWord">' + inputWord + '</span><span class="emotionDel">&#10006</span>';
+        currentCell.before(newTagHTML);
+
+        parentCell.find(".emotionTag").last().css("background-color", function() {
+            color = "hsl(" + Math.random() * 360 + ", 100%, 95%)";
+            return color;
+        });
+
+        parentCell.find(".emotionDel").last().click(function () {
+            $(this).parent().remove();
+
+            modifyEmotionArray(currentCell, inputWord, "remove")
+
+        });
+
+        if(isNew)
+        {
+            modifyEmotionArray(currentCell, inputWord, "add");
+        }
+    }
+
+}
+
+function modifyEmotionArray(currentCell, inputWord, operation)
+{
+    var entryID = currentCell.attr('entryid');
+
+    var cellAttribute = "emotions";
+    var cellValue = inputWord;
+
+    var data = { "entryid": entryID, "cellData": [{"cellAttr": cellAttribute, "cellValue": cellValue}, {"cellAttr": "operation", "cellValue": operation}]};
+
+    postData(data, currentCell);
 }
 
 //
@@ -156,13 +202,12 @@ function createTag(currentCell)
 
 $(document).ready(function () {
     
-    $(document).on("change", "#optionsTable :input", function() {
+    $(document).on("change", "#optionsDiv :input", function() {
         var cell = $(this);
         var cellValue = cell.val();
         var cellAttribute = cell.attr('class').replace("Input", "");
 
         var entryID = cell.attr('entryid');
-        var cellRow = cell.attr('row');
 
         var reg=/^([0-9.:]{0,9})$/;
     
@@ -199,10 +244,14 @@ $(document).ready(function () {
                 dontSend = false;
                 cell.parent().css("box-shadow", "0 0 0 2px #000");
             }
-            
+        }
+        if(cellAttribute == "emotions")
+        {
+            dontSend = true;
         }
 
-        var parentRow = cell.parent().parent().parent().parent();
+        var parentRow = cell.parent().parent().parent();
+
 
         var rrValue = parentRow.find(".rrInput").val();
         var entryValue = parentRow.find(".entryInput").val();
@@ -213,12 +262,12 @@ $(document).ready(function () {
 
         if(["rr", "entry"].includes(cellAttribute) && rrValue != "" && entryValue != "" && !dontSend)
         {
-            calculateStopTarget(parentRow, entryValue, rrValue, cellRow, entryID);
+            calculateStopTarget(parentRow, entryValue, rrValue, entryID);
         }
 
         if((["sold", "entry", "numCons"].includes(cellAttribute)) && numConsValue != "" && !dontSend)
         {
-            calculateProfit(parentRow, entryValue, soldValue, numConsValue, cellRow, entryID);
+            calculateProfit(parentRow, entryValue, soldValue, numConsValue, entryID);
         }
 
         //console.log("Entry ID: " + entryID + ", Attribute: " + cellAttribute + ", Value: " + cellValue + ", Row: " + cellRow);
@@ -229,8 +278,6 @@ $(document).ready(function () {
         //{
             //console.log("matches");
         //}
-
-        dontSend = true;
 
         if(!dontSend)
         {
@@ -294,7 +341,7 @@ function postData(data, referenceCell)
 //
 // FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS FORM CALCULATIONS 
 //
-function calculateStopTarget(parentRow, entry, rr, cellRow, entryID)
+function calculateStopTarget(parentRow, entry, rr, entryID)
 {
     var a = rr.split(":");
     var reward = 1 + a[0] / 100;
@@ -306,12 +353,12 @@ function calculateStopTarget(parentRow, entry, rr, cellRow, entryID)
     parentRow.find(".slInput").val(sl);
     parentRow.find(".tpInput").val(tp);
 
-    var data = { "entryid": entryID, "cellData": [{"cellAttr": "tp", "cellValue": tp}, {"cellAttr": "sl", "cellValue": sl}], "cellRow" : cellRow };
+    var data = { "entryid": entryID, "cellData": [{"cellAttr": "tp", "cellValue": tp}, {"cellAttr": "sl", "cellValue": sl}]};
 
     postData(data);
 }
 
-function calculateProfit(parentRow, entry, sold, numCons, cellRow, entryID)
+function calculateProfit(parentRow, entry, sold, numCons, entryID)
 {
     
     if(sold == "")
@@ -324,7 +371,7 @@ function calculateProfit(parentRow, entry, sold, numCons, cellRow, entryID)
     }
 
     parentRow.find(".profitInput").val(profit);
-    var data = { "entryid": entryID, "cellData": [{"cellAttr": "profit", "cellValue": profit}], "cellRow" : cellRow };
+    var data = { "entryid": entryID, "cellData": [{"cellAttr": "profit", "cellValue": profit}]};
     postData(data);
 }
 

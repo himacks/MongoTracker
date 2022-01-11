@@ -4,15 +4,18 @@ $('.emotionsInput').keypress(function (e) {
     if (key == 13)
     {
         console.log("keypressed");
-        var inputWord = $(this).val();
         var currentCell = $(this);
         createTag(currentCell);
+        var width = $(this).outerWidth(true);
+
+        console.log((width));
+
     }
 })
 
 function createTag(currentCell)
 {
-    var parentCell = currentCell.parent()
+    var parentCell = currentCell.parent();
 
     var inputWord = currentCell.val();
 
@@ -20,10 +23,14 @@ function createTag(currentCell)
 
     currentCell.val("");
     var newTagHTML = '<span class="emotionTag" id="' + randomID + '"><span class="emotionWord">' + inputWord + '</span><span class="emotionDel">&#10006</span>';
-    parentCell.children("#emotionTagsDiv").append(newTagHTML);
-    parentCell.children("#emotionTagsDiv").find(".emotionDel").last().click(function () {
-        $(this).parent().remove();
+    currentCell.before(newTagHTML);
+
+    parentCell.find(".emotionTag").last().css("background-color", function() {
+        color = "hsl(" + Math.random() * 360 + ", 100%, 95%)";
+        return color;
     });
 
-    console.log(currentCell);
+    parentCell.find(".emotionDel").last().click(function () {
+        $(this).parent().remove();
+    });
 }

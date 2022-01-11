@@ -1,5 +1,3 @@
-
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button,
 ::-webkit-calendar-picker-indicator {
@@ -7,100 +5,99 @@ input::-webkit-inner-spin-button,
   margin: 0;
 }
 
-body{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-#optionsTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#tableDiv {
-    border:solid black 2px;
-    border-radius: 20px;
+#optionsDiv {
     min-width: 94em;
     width: 99vw;
-}
-
-tr {
-    width: 100%;
-    text-align: center;
+    border:solid black 2px;
     border-radius: 20px;
 }
 
-td {
-    border: hidden;
-    text-align: center;  
-    line-height: 2rem;
-    white-space:nowrap;
-    max-width: 100%;
-    padding: 0.5rem 0 0.5rem 0;
-    font-family: none;
+.optionsRow {
+    display: flex;
+    text-align:center;
 }
 
-td > span > span {
+.colTitle {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 700;
+    padding-top: 10px;
+}
+
+.inputBorder {
     border-color:transparent;
     box-shadow:0 0 0 2px #000;
     border-radius: 40px;
-    padding:5px;
+    padding:0 5px;
     background-color: white;
+    display: flex;
+    margin: 6px 9px 6px 9px;
+    justify-content: center;
+}
+
+input {
+    border: hidden;
+    font-family: Arial;
     width: 100%;
+    margin: 5px 0;
 }
 
-
-
-#btnDelSpan {
-    box-shadow: none;
-    background-color: transparent;
+.optionsRowHeader {
+    padding-left: 7px;
+    margin-bottom: 3px;
 }
 
-td > span {
-    padding: 0.67rem 0.5rem;
-    border-top: black solid 2px;
-    border-bottom: black solid 2px;
+.optionsRowEntry {
+    border:solid black 2px;
+    border-radius: 25px;
+    margin: 0 5px 10px 5px;
 }
 
-tr:nth-child(even) > td > span {
+.optionsRowEntry:nth-child(even) {
     background-color: rgba(216, 216, 216, 0.979);
 }
 
-td:first-child > span {
-    padding:0.67rem 0.5rem 0.67rem 0.8rem;
-    margin-left: 5px;
-    border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
-    border-left:solid black 2px;
-
-}
-
-td:last-child > span {
-    padding:0.67rem 0.8rem 0.67rem 0.5rem;
-    border-top-right-radius: 25px;
-    margin-right: 5px;
-    border-bottom-right-radius: 25px;
-    border-right:solid black 2px;
-}
-
-.dateInput, .expiryInput {
-    width: 7.5em;
-}
-
-.profitInput {
-    width: 4em;
+.tickerCol {
+    width: 5.6rem;
 }
 
 .tickerInput {
     width: 4.5em;
 }
 
+.expiryColEntry > .inputBorder, .dateColEntry > .inputBorder {
+    padding: 3.5px 5px;
+}
+
+.callputCol {
+    width: 4.4rem;
+}
 
 .callputInput {
     width: 3em;
 }
 
+
+.expiryCol, .dateCol {
+   width: 8.4rem;  
+}
+
+.dateInput, .expiryInput {
+    width:  8.4rem;
+    margin: 0 0;
+}
+
+.numConsCol {
+    width: 3.5rem;
+    padding-top: 0px;
+}
+
 .numConsInput {
     width: 2em;
+}
+
+
+.strikeCol {
+    width: 5.2rem;
 }
 
 .strikeInput {
@@ -108,66 +105,115 @@ td:last-child > span {
 }
 
 
+.rrCol {
+    width: 6rem;
+}
+
 .rrInput {
     width: 5em;
 }
 
-.emotionsInput {
-    width: 100%;
-    flex: 20 1 auto;
-    border: hidden;
-    display: inline-block;
+
+.entryCol {
+    width: 4.4rem;
+}
+
+.slCol {
+    width: 4.4rem;
+}
+
+.tpCol {
+    width: 4.4rem;
+}
+
+.soldCol {
+    width: 4.4rem;
+}
+
+.profitCol {
+    width: 5.2rem;
+}
+
+.profitInput {
+    width: 4em;
+}
+
+
+.tradeNotesCol {
+    width: 11.9rem;
+}
+
+.tradeNotesInput {
+    width: 10rem;
+}
+
+.tradeNotesInput:hover {
+    direction:ltr;
 }
 
 .emotionsCol {
-    width: 100%;
-    min-width:5em;
-    padding-right:1.6rem;
+    flex: 20 1 auto;
+    margin-left: 5px;
+    overflow: hidden;
+    padding: 0 5px;
 }
 
-.emotionsCol > span {   
-    width: 100%;
+.emotionsColTitle  {
+    padding-top: 10px;
 }
 
-.emotionsCol > span > span {
-    display: inline-block;
-    width: 100%;
-    line-height: 0;
-    vertical-align: top;
+.emotionsColTitle {
+    margin-right: 65px;
 }
+
+
 
 .emotionsDiv {
-    display: flex;
-    width: 100%;
-    white-space: nowrap; /* IMPORTANT THIS IS SO THE ELEMENTS DONT WRAP */
-    margin: 0 auto;
-    line-height: 0;
-    padding: 0 0 0 0;
+    border-color:transparent;
+    box-shadow:0 0 0 2px #000;
+    border-radius: 40px;
+    padding: 0 5px;
+    background-color: white;
+    margin-top: 6px;
+    overflow: hidden;
 }
 
 .emotionTagsDiv {
-    flex: 1 1 auto;
     white-space: nowrap;
-    vertical-align: middle;
-    padding-top: 1px;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow: hidden;
+    margin: 5px 0;
+    justify-content: flex-start;
+    border-radius: 40px;
+}
+
+.emotionTagsDiv:hover {
+    justify-content: flex-end;
+}
+
+.emotionsInput {
+    flex: 20 1 auto;
+    border: hidden;
+    margin: 0 5px;
+    width: 6rem;
+    background: transparent;
 }
 
 .emotionTag {
     display: inline-block;
-    vertical-align: text-bottom;
-    margin-right: 0.5em;
+    vertical-align: middle;
+    margin-left: 0.5em;
     text-align: center;
     font-family: Arial;
     font-size: 9pt;
     border:solid black 1px;
-    border-radius: 25px;
+    border-radius: 25px;    
 }
 
 .emotionWord {
-    margin-right: 4px;
-    margin-left: 6px;
-    margin-top: 0.6em;
-    margin-bottom: 0.6em;
+    margin: 1px 4px 0 6px;
     display: inline-block;
 }
 
@@ -184,10 +230,6 @@ td:last-child > span {
 }
 
 
-.tradeNotesInput {
-    width: 12em;
-}
-
 .entryInput, .slInput, .tpInput, .soldInput {
     width: 3em;
 }
@@ -196,33 +238,25 @@ td:last-child > span {
     text-align: center;
 }
 
-input {
-    margin:0 auto;
-    border-style: hidden;
-    font-family: Arial;
-}
-
-input:focus {
+textarea:focus, input:focus{
     outline: none;
 }
 
-#btnDelRow {
-    border-radius: 100%;
-    border: 2px solid black;
-    padding: 0 0.1em 0 0.1em;
-    background-color: rgb(233, 81, 81);
-    color: rgb(255, 255, 255);
+.btnDelRowBorder {
+    padding: 0px 4.14px;
+    margin: 8px 10px 0 0;
+    background-color: rgb(243, 130, 130);
+    border-radius: 50px;
 }
 
-#btnDelRow:hover  {
-    color: rgb(255, 255, 255);
+.delRowButton {
+    margin-left: 20px;
+}
+
+.delRowButton:hover {
     cursor: pointer;
-    background-color: rgba(233, 81, 81, 0.719);
 }
 
-#btnAddRow {
-    margin: 0.5em 0 0 0;
-    display: inline-block;
-    border-radius: 40px;
-    padding: 0.5em;
+.btnDelRowText {
+    flex: 1 1 auto;
 }

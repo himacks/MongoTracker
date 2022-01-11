@@ -30,7 +30,7 @@ const optionsEntrySchema =  {
     sl: Number,
     tp: Number,
     sold: Number,
-    emotions: String,
+    emotions: Array,
     tradeNotes: String,
     profit: Number,
     id: Number
@@ -58,9 +58,7 @@ app.use("/postData", (req, res) => {
         console.log(entryID);
         
         var cellData = req.body.cellData;
-
-        var cellRow = req.body.cellRow;
-
+        
         var newRow;
 
         var objectData = {};
@@ -94,7 +92,7 @@ app.use("/postData", (req, res) => {
             updateObject(entryID, objectData);
         }
         //console.log(returnData);
-        var returnData = { "entryid": entryID, "newRow": newRow, "cellRow": cellRow};
+        var returnData = { "entryid": entryID, "newRow": newRow};
         res.send(returnData);
     }
 })
@@ -131,17 +129,47 @@ function createNewObject(data)
 
 function updateObject(objectID, data)
 {
+    console.log();
 
-    optionsEntry.findByIdAndUpdate(objectID, data, function(err, result) {
-        if(err)
+    if(data["emotions"] != undefined && data["operation"] != undefined)
+    {
+
+        if(data["operation"] == "add")
         {
-            console.log(err);
+            console.log('adding data');
+            var method = '$push';
         }
-        else
+        else if (data["operation"] == "remove")
         {
-            console.log("RESULT: " + result);
+            console.log('removing data');
+            var method = '$pull';
         }
-    });
+
+
+        optionsEntry.updateOne({ _id: objectID }, {[method]:{"emotions":data["emotions"]}}, function(err, result) {
+            if(err)
+            {
+                console.log(err);
+            }
+            else
+            {
+                console.log("RESULT: " + result);
+            }
+        });
+    }
+    else
+    {
+        optionsEntry.findByIdAndUpdate(objectID, data, function(err, result) {
+            if(err)
+            {
+                console.log(err);
+            }
+            else
+            {
+                console.log("RESULT: " + result);
+            }
+        });
+    }
 }
 
 function deleteObject(objectID)
