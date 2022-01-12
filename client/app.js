@@ -83,7 +83,7 @@ function createNewRow(entry)
 
         if(field == "emotions")
         {
-            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry"><div class="emotionsDiv"><div class="emotionTagsDiv"><input entryId=' + entryID + ' class="' + field + "Input" + '"' + inputTypeData + ' value="" /></div></span></td>';
+            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + '><div class="emotionsDiv"><div class="emotionTagsDiv"><input class="' + field + "Input" + '"' + inputTypeData + ' value="" /></div></span></td>';
             rowRef.append( cellContent );
 
             var emotionsColRef = rowRef.find('.emotionsInput');
@@ -100,21 +100,21 @@ function createNewRow(entry)
         }
         else
         {
-            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry"><span class="inputBorder"><input entryId=' + entryID + ' class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></span></span>';
+            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + ' ><span class="inputBorder"><input class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></span></span>';
             rowRef.append( cellContent );
         }
 
         
     })
 
-    var delButtonContent = '<span class="delRowButton"><span class="inputBorder btnDelRowBorder"><span class="btnDelRowText" entryId=' + entryID + '>&#10006</span></span></span>';
+    var delButtonContent = '<span class="delRowButton" entryId=' + entryID + '><span class="inputBorder btnDelRowBorder"><span class="btnDelRowText">&#10006</span></span></span>';
 
     rowRef.append( delButtonContent );
 
     rowRef.find( ".delRowButton" ).click( function()
     {
 
-        var currEntryId = $(this).children()[0].firstChild.getAttribute("entryid");
+        var currEntryId = $(this).attr("entryid");
 
         $(this).parent().remove();
 
@@ -158,14 +158,12 @@ function createTag(currentCell, givenWord, isNew)
     {
         var inputWord = givenWord;
         
-        var randomID = Math.floor(Math.random() * 100);
-
         currentCell.val("");
-        var newTagHTML = '<span class="emotionTag" id="' + randomID + '"><span class="emotionWord">' + inputWord + '</span><span class="emotionDel">&#10006</span>';
+        var newTagHTML = '<span class="emotionTag"><span class="emotionWord">' + inputWord + '</span><span class="emotionDel">&#10006</span>';
         currentCell.before(newTagHTML);
 
         parentCell.find(".emotionTag").last().css("background-color", function() {
-            color = "hsl(" + Math.random() * 360 + ", 100%, 95%)";
+            color = "hsl(" + Math.random() * 360 + ", 100%, 85%)";
             return color;
         });
 
@@ -186,7 +184,7 @@ function createTag(currentCell, givenWord, isNew)
 
 function modifyEmotionArray(currentCell, inputWord, operation)
 {
-    var entryID = currentCell.attr('entryid');
+    var entryID = currentCell.parent().parent().parent().attr('entryid');
 
     var cellAttribute = "emotions";
     var cellValue = inputWord;
@@ -207,7 +205,7 @@ $(document).ready(function () {
         var cellValue = cell.val();
         var cellAttribute = cell.attr('class').replace("Input", "");
 
-        var entryID = cell.attr('entryid');
+        var entryID = cell.parent().parent().attr('entryid');
 
         var reg=/^([0-9.:]{0,9})$/;
     
@@ -343,6 +341,9 @@ function postData(data, referenceCell)
 //
 function calculateStopTarget(parentRow, entry, rr, entryID)
 {
+
+    console.log('calculating daskljdskld');
+
     var a = rr.split(":");
     var reward = 1 + a[0] / 100;
     var risk = 1 - a[1] / 100;
@@ -379,7 +380,7 @@ function calculateProfit(parentRow, entry, sold, numCons, entryID)
 // TIPPY JS STUFF HERE (TOOL TIPS, DESCRIPTORS, ETC)
 // 
 
-tippy('#dateTableHeader', {
+tippy('.dateColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 100,
@@ -389,7 +390,7 @@ tippy('#dateTableHeader', {
     content: '<center>The date you entered the trade.</center>',
   });
 
-tippy('#tickerTableHeader', {
+tippy('.tickerColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 100,
@@ -398,7 +399,7 @@ tippy('#tickerTableHeader', {
     content: '<center>The symbol of the ticker.</center>',
 });
 
-tippy('#callputTableHeader', {
+tippy('.callputColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 110,
@@ -407,7 +408,7 @@ tippy('#callputTableHeader', {
     content: '<center>The option contract type, Call or Put.</center>',
 });
 
-tippy('#expiryTableHeader', {
+tippy('.expiryColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 120,
@@ -416,7 +417,7 @@ tippy('#expiryTableHeader', {
     content: '<center>The expiration date of the option contract.</center>',
 });
 
-tippy('#numConsTableHeader', {
+tippy('.numConsColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 100,
@@ -425,7 +426,7 @@ tippy('#numConsTableHeader', {
     content: '<center>The number of contracts purchased in this trade.</center>',
 });
 
-tippy('#strikeTableHeader', {
+tippy('.strikeColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 120,
@@ -434,7 +435,7 @@ tippy('#strikeTableHeader', {
     content: '<center>The contract strike price of the trade.</center>',
 });
 
-tippy('#rrTableHeader', {
+tippy('.rrColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 160,
@@ -443,7 +444,7 @@ tippy('#rrTableHeader', {
     content: '<center>The Reward/Risk Percentages on this trade. Eg. 20:10 will yield a 20% reward while risking 10% of your entry.</center>',
 });
 
-tippy('#entryTableHeader', {
+tippy('.entryColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 130,
@@ -452,7 +453,7 @@ tippy('#entryTableHeader', {
     content: '<center>The cost of entry per contract on this trade.</center>',
 });
 
-tippy('#slTableHeader', {
+tippy('.slColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 180,
@@ -461,7 +462,7 @@ tippy('#slTableHeader', {
     content: '<center>The calculated stop loss of this trade. Use as Reference for exiting this trade. Can edit contents for manual stop price. </center>',
 });
 
-tippy('#tpTableHeader', {
+tippy('.tpColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 180,
@@ -470,7 +471,7 @@ tippy('#tpTableHeader', {
     content: '<center>The calculated take profit of this trade. Use as Reference for exiting this trade. Can edit contents for manual take profit price. </center>',
 });
 
-tippy('#soldTableHeader', {
+tippy('.soldColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 130,
@@ -479,7 +480,7 @@ tippy('#soldTableHeader', {
     content: '<center>The sold price of the contract on this trade. </center>',
 });
 
-tippy('#profitTableHeader', {
+tippy('.profitColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 130,
@@ -488,7 +489,7 @@ tippy('#profitTableHeader', {
     content: '<center>The profit of this trade. </center>',
 });
 
-tippy('#tradeNotesTableHeader', {
+tippy('.tradeNotesColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 180,
@@ -497,7 +498,7 @@ tippy('#tradeNotesTableHeader', {
     content: "<center>Any notes you would like to journal on this trade for later reference. Writing mistakes down helps reduce them occuring in the future! </center>",
 });
 
-tippy('#emotionsTableHeader', {
+tippy('.emotionsColTitle', {
     delay: [25, 50],
     inlinePositioning: true,
     maxWidth: 220,

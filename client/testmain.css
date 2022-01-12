@@ -229,6 +229,17 @@ input {
     width: 100%;
 }
 
+/* ADDED THIS  11/11/2022 */
+
+textarea {
+    border: hidden;
+    font-family: Arial;
+    height: 1.14em;
+    padding: 1px 3px;
+    overflow:hidden;
+    resize: none;
+}
+
 textarea:focus, input:focus{
     outline: none;
 }
