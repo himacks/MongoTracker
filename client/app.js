@@ -28,6 +28,9 @@ btnAddRow.addEventListener('click', function()
  * 
  * @param  {} entry object containing cell data of a singular option row. for a complete row needs every field from var optionFields. 
  */
+
+ var savedBigBoxElements = [];
+
 function createNewRow(entry)
 {
     $( "#optionsDiv" ).append( '<div class="optionsRow optionsRowEntry"></div>' );
@@ -70,7 +73,14 @@ function createNewRow(entry)
 
         if(entry === undefined || entry[field] === undefined || entry[field] === null)
         {
-            content = '""';
+            if(field == 'tradeNotes')
+            {
+                content = '';
+            }
+            else
+            {
+                content = '""';
+            }
         }
         else if(field == "date" || field == "expiry")
         {
@@ -83,7 +93,7 @@ function createNewRow(entry)
 
         if(field == "emotions")
         {
-            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + '><div class="emotionsDiv"><div class="emotionTagsDiv"><input class="' + field + "Input" + '"' + inputTypeData + ' value="" /></div></span></td>';
+            var cellContent = '<div class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + '><div class="emotionsDiv"><div class="emotionTagsDiv"><input class="' + field + "Input" + '"' + inputTypeData + ' value="" /></div></div></div>';
             rowRef.append( cellContent );
 
             var emotionsColRef = rowRef.find('.emotionsInput');
@@ -98,16 +108,25 @@ function createNewRow(entry)
                 });
             }
         }
+        else if(field == "tradeNotes")
+        {
+            var cellContent = '<div class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + ' ><span class="inputBorder"><textarea class="' + field + "Input" + '"' + inputTypeData + '/></textarea></span></div>';
+            rowRef.append( cellContent );
+
+            var tradeNotesColRef = rowRef.find('.tradeNotesInput');
+
+            tradeNotesColRef.val(content);
+        }
         else
         {
-            var cellContent = '<span class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + ' ><span class="inputBorder"><input class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></span></span>';
+            var cellContent = '<div class="colEntry ' + field + 'Col ' + field + 'ColEntry" entryId=' + entryID + ' ><span class="inputBorder"><input class="' + field + "Input" + '"' + inputTypeData + ' value="' + content + '" /></span></div>';
             rowRef.append( cellContent );
         }
 
         
     })
 
-    var delButtonContent = '<span class="delRowButton" entryId=' + entryID + '><span class="inputBorder btnDelRowBorder"><span class="btnDelRowText">&#10006</span></span></span>';
+    var delButtonContent = '<div class="delRowButton" entryId=' + entryID + '><span class="inputBorder btnDelRowBorder"><span class="btnDelRowText">&#10006</span></span></div>';
 
     rowRef.append( delButtonContent );
 
@@ -132,22 +151,166 @@ function createNewRow(entry)
         }
     });
 
+    var heightInitial;
+
+    rowRef.find('.tradeNotesColEntry').hover(function (e) {
+
+
+        //console.log("hovering small box");
+    
+        //attempts to find existing expanded box
+    
+        var clonedAbsoluteElement = $('.tradeNotesColExpanded[entryid="' + $(this).attr('entryid') + '"]');
+    
+        //if no expanding box is found for this row, it creates one and gives it required properties.
+    
+        if(clonedAbsoluteElement.length == 0)
+        {
+            clonedAbsoluteElement = $(this).clone();
+            //console.log("cloning element, not yet created");
+            $(this).parent().parent().parent().append(clonedAbsoluteElement);
+    
+            var positionCoords = $(this).position();
+    
+            clonedAbsoluteElement.attr('class', 'colEntry tradeNotesCol tradeNotesColEntry tradeNotesColExpanded')
+    
+            // initialization properties
+    
+            var textArea = clonedAbsoluteElement.find('.tradeNotesInput');
+        
+            var inputBorder = clonedAbsoluteElement.find('.inputBorder');
+    
+            textArea.css({
+                height: '68px',
+                width: '18em',
+                transition: 'width 0.5s ease-out, height 0.5s ease-out'
+            })
+
+            inputBorder.css({
+                "border-radius": '13px',
+                padding: '5px 5px 5px 0px'
+            })
+    
+            clonedAbsoluteElement.css({
+                position: "absolute",
+                top: positionCoords['top'] + "px",
+                left: positionCoords['left'] + "px",
+                width: '18em',
+                transition: 'width 0.5s ease-out'
+            });
+
+            //sets initial height if there is pre-existing text larger than the default height of the expanded box height. uses ratio of new height to original height
+            //because textArea.prop('scrollHeight') gets the height of the text before the text area is expanded horizontally so it takes up more vertical space.
+            heightInitial = (Math.max(textArea.prop('scrollHeight') * 11.9 / 18.0, 68.0)) + "px";
+
+        }
+        else
+        {
+            //console.log("element already created");
+            clonedAbsoluteElement.css({
+                visibility: 'visible'
+            });
+        }
+        
+    }, function(e) {
+    
+        var originalRelativeElement = $(this);
+
+        var entryID = originalRelativeElement.attr('entryid');
+    
+        var clonedAbsoluteElement = $('.tradeNotesColExpanded[entryid="' + entryID + '"]');
+    
+        if(!savedBigBoxElements.includes(clonedAbsoluteElement[0]))
+        {
+            savedBigBoxElements.push(clonedAbsoluteElement[0]);
+    
+            //console.log("unhovering small box")
+    
+            var textArea = clonedAbsoluteElement.find('.tradeNotesInput');
+    
+            var inputBorder = clonedAbsoluteElement.find('.inputBorder');
+    
+            var savedHeight = heightInitial;
+    
+            var height;
+                
+            clonedAbsoluteElement.hover(
+                function(e) {
+    
+                    //console.log("hovering big box");
+    
+                    $(this).css({
+                        width: '18rem',
+                        transition: 'width 0.5s ease-out',
+                    })
+                    
+                    height = savedHeight;
+    
+                    textArea.css({
+                        height: savedHeight,
+                        "margin-left": '5px',
+                        transition: 'height 0.5s ease-out'
+                    })
+    
+    
+    
+    
+                    var scrollHeightOld = 0;
+    
+                    textArea.on('propertychange input', function (e) {
+    
+                        if(textArea.prop('scrollHeight') > 74)
+                        {
+                            textArea.css({
+                                transition: 'none'
+                            });
+    
+                            textArea.height(0);
+                
+                            if(textArea.prop('scrollHeight') != scrollHeightOld)
+                            {   
+                                textArea.height(textArea.prop('scrollHeight'));
+                                scrollHeightOld = textArea.prop('scrollHeight');
+                            }
+                        }
+                        else
+                        {
+                            textArea.height('68px');
+                            
+                        }
+                        height = textArea.height();
+                    })
+    
+            },  function(e) {
+    
+                    savedHeight = height;
+    
+                    //console.log("unhovering big box");
+    
+                    $(this).css({
+                        width: '11.9rem',
+                        visibility: "hidden"
+                    })
+    
+                    textArea.css({
+                        height: '1.14em',
+                    })
+    
+                    var smallTextBox = originalRelativeElement.find('.tradeNotesInput');
+
+                    if(smallTextBox.val() != textArea.val())
+                    {
+                        smallTextBox.val(textArea.val());
+
+                        var data = { "entryid": entryID, "cellData": [{"cellAttr": "tradeNotes", "cellValue": textArea.val()}]};
+                        
+                        postData(data, smallTextBox);
+                    }
+                })
+        }
+    });
 
 }
-
-/*
-$('.emotionsInput').keypress(function (e) {
-    var key = e.which;
-
-    if (key == 13)
-    {
-        console.log("keypressed");
-        var inputWord = $(this).val();
-        var currentCell = $(this);
-        createTag(currentCell);
-    }
-})
-*/
 
 function createTag(currentCell, givenWord, isNew)
 {

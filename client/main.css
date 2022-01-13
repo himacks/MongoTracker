@@ -151,8 +151,17 @@ input {
     width: 10rem;
 }
 
-.tradeNotesInput:hover {
-    direction:ltr;
+.tradeNotesColEntry > .inputBorder {
+    padding: 5px;
+}
+
+textarea {
+    border: hidden;
+    font-family: Arial;
+    height: 1.14em;
+    padding: 1px 3px;
+    overflow:hidden;
+    resize: none;
 }
 
 .emotionsCol {
