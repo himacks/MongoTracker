@@ -4,8 +4,8 @@ fetch('http://localhost:4000/getdata')
 .then(
     data =>
     { 
-        data.forEach(entry => {
-            createNewRow(entry);
+        data.forEach(entryData => {
+            createNewRow(entryData);
         })           
     }
 )
@@ -26,26 +26,34 @@ btnAddRow.addEventListener('click', function()
 /**
  * Creates a table row in the options table.
  * 
- * @param  {} entry object containing cell data of a singular option row. for a complete row needs every field from var optionFields. 
+ * @param  {} entryData object containing cell data of a singular option row. for a complete row needs every field from var optionFields. 
  */
 
- var savedBigBoxElements = [];
+var savedBigBoxElements = [];
 
-function createNewRow(entry)
+var uncatalogedIndex = 0;
+
+function createNewRow(entryData)
 {
-    $( "#optionsDiv" ).append( '<div class="optionsRow optionsRowEntry"></div>' );
+    $( "#optionsDiv" ).append( '<div class="optionsRow"></div>' );
+    $( ".optionsRow" ).last().append( '<div class="optionsRowEntry"></div>' );
 
     var rowRef = $( ".optionsRowEntry" ).last();
 
     var entryID = "notCataloged";
+
+    if(entryData != undefined)
+    {
+        entryID = entryData["_id"];
+    }
+    else
+    {
+        entryID += uncatalogedIndex;
+        uncatalogedIndex++;
+    }
         
     optionFields.forEach(field =>
     {   
-
-        if(entry != undefined)
-        {
-            entryID = entry["_id"];
-        }
   
         if(["date", "expiry"].includes(field))
         {
@@ -71,7 +79,7 @@ function createNewRow(entry)
             inputTypeData = ' type="text"';
         }
 
-        if(entry === undefined || entry[field] === undefined || entry[field] === null)
+        if(entryData === undefined || entryData[field] === undefined || entryData[field] === null)
         {
             if(field == 'tradeNotes')
             {
@@ -84,11 +92,11 @@ function createNewRow(entry)
         }
         else if(field == "date" || field == "expiry")
         {
-            content = entry[field].slice(0, entry[field].indexOf("T"));
+            content = entryData[field].slice(0, entryData[field].indexOf("T"));
         }
         else
         {
-            content = entry[field];
+            content = entryData[field];
         }
 
         if(field == "emotions")
@@ -98,9 +106,9 @@ function createNewRow(entry)
 
             var emotionsColRef = rowRef.find('.emotionsInput');
 
-            if(entry != undefined)
+            if(entryData != undefined)
             {
-                entry[field].forEach(inputWord => {
+                entryData[field].forEach(inputWord => {
                     if(inputWord.length > 0)
                     {
                         createTag(emotionsColRef, inputWord, false );                 
@@ -125,21 +133,23 @@ function createNewRow(entry)
 
         
     })
+    var addLegButtonContent = '<button class="menuButton entryButton" type="button" entryId=' + entryID + '><span aria-hidden="true"><i class="fa fa-bars"></i></span></button>';
+    var delRowButtonContent = '<button class="delRowButton entryButton" type="button" entryId=' + entryID + '><span aria-hidden="true"><i class="fa fa-close"></i></span></button>';
 
-    var delButtonContent = '<div class="delRowButton" entryId=' + entryID + '><span class="inputBorder btnDelRowBorder"><span class="btnDelRowText">&#10006</span></span></div>';
-
-    rowRef.append( delButtonContent );
+    rowRef.append( addLegButtonContent );
+    rowRef.append( delRowButtonContent );
 
     rowRef.find( ".delRowButton" ).click( function()
     {
 
         var currEntryId = $(this).attr("entryid");
 
-        $(this).parent().remove();
+        $(this).parent().parent().remove();
 
 
-        if( currEntryId != "notCataloged" )
+        if( currEntryId.indexOf("notCataloged") == -1 )
         {
+            console.log("deleting from database");
             deleteRow( currEntryId );
         }
 
@@ -153,7 +163,7 @@ function createNewRow(entry)
 
     var heightInitial;
 
-    rowRef.find('.tradeNotesColEntry').hover(function (e) {
+    rowRef.find('.tradeNotesColEntry').last().hover(function (e) {
 
 
         //console.log("hovering small box");
@@ -183,7 +193,7 @@ function createNewRow(entry)
             textArea.css({
                 height: '68px',
                 width: '18em',
-                transition: 'width 0.5s ease-out, height 0.5s ease-out'
+                transition: 'width 0.4s ease-out, height 0.4s ease-out'
             })
 
             inputBorder.css({
@@ -193,10 +203,10 @@ function createNewRow(entry)
     
             clonedAbsoluteElement.css({
                 position: "absolute",
-                top: positionCoords['top'] + "px",
-                left: positionCoords['left'] + "px",
+                top: $(this).position()['top'] + "px",
+                left: $(this).position()['left'] + "px",
                 width: '18em',
-                transition: 'width 0.5s ease-out'
+                transition: 'width 0.4s ease-out'
             });
 
             //sets initial height if there is pre-existing text larger than the default height of the expanded box height. uses ratio of new height to original height
@@ -210,6 +220,13 @@ function createNewRow(entry)
             clonedAbsoluteElement.css({
                 visibility: 'visible'
             });
+
+            if( $(this).position()['top'] != clonedAbsoluteElement.position()['top'] || $(this).position()['left'] != clonedAbsoluteElement.position()['left']) {
+                clonedAbsoluteElement.css({
+                    top: $(this).position()['top'] + "px",
+                    left: $(this).position()['left'] + "px",
+                });
+            }
         }
         
     }, function(e) {
@@ -241,7 +258,7 @@ function createNewRow(entry)
     
                     $(this).css({
                         width: '18rem',
-                        transition: 'width 0.5s ease-out',
+                        transition: 'width 0.4s ease-out',
                     })
                     
                     height = savedHeight;
@@ -249,7 +266,7 @@ function createNewRow(entry)
                     textArea.css({
                         height: savedHeight,
                         "margin-left": '5px',
-                        transition: 'height 0.5s ease-out'
+                        transition: 'height 0.4s ease-out'
                     })
     
     
@@ -288,7 +305,7 @@ function createNewRow(entry)
                     //console.log("unhovering big box");
     
                     $(this).css({
-                        width: '11.9rem',
+                        width: '12rem',
                         visibility: "hidden"
                     })
     
@@ -471,7 +488,9 @@ function postData(data, referenceCell)
 
             if (data["newRow"] == true)
             {
-                referenceCell.attr('entryId', data["entryid"]);
+                console.log("new row");
+
+                referenceCell.parent().parent().parent().children().attr('entryId', data["entryid"]);
             }
        }
 

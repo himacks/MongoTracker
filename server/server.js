@@ -70,7 +70,7 @@ app.use("/postData", (req, res) => {
         console.log(objectData);
 
         //console.log("Entry ID: " + entryID + ", Attribute: " + cellAttr + ", Value: " + cellVal + ", Cell Row: " + cellRow);
-        if (entryID == "notCataloged")
+        if (entryID.indexOf("notCataloged") != -1)
         {
             console.log("CREATING OBJECT");
             var newEntryIDObject = mongoose.Types.ObjectId();
