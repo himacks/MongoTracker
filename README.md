@@ -21,16 +21,7 @@ Next Steps:
 - figure out how to handle emotions, where each new word is put into a mini box , colored maybe
 - 
 
-
-
-
-
-
-
-
-
-
-
 GOALS
 
 - Need to somehow add a way so that you can add sub entries in a single trade, this will allow people to enter secondary entries like adding dips or adding to winners, one way to this is adding a + button next to the remove column, and then it expands the current row showing options to add another entry etc.
+- figured out how to do this, add a plus button on main entry to add legs, add a settings button to show settings like auto calculate fields or leave for manual, make legs separate entries or exists or do cost averaging, etc.
